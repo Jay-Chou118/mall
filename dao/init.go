@@ -40,4 +40,18 @@ func Database(connRead, connWrite string) {
 	sqlDB.SetConnMaxLifetime(time.second * 30)
 	_db = db
 
+	//主从配置
+	_ = _db.Use(dbresolver.
+		Register(dbresolver.Config{
+			Source: []gorm.Dialector{mysql.Open(connWrite)}, //读操作
+			Replicas: []gorm.Dialector{mysql.Open(connRead),mysql.Open(connRead)},
+			Policy: dbresolver.RamdomPolicy{},
+		}))
+		migration()
+
+}
+
+func NewDBClient(ctx context.Context) *gorm.DB {
+	db := _db
+	return db.WithContext(ctx)
 }
