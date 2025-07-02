@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"api/v1"
 	"net/http"
 
 	"github.com/Jay-Chou118/mall/middleware"

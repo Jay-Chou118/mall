@@ -61,6 +61,20 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 	//密码加密
 	if err = user.SetPassword(service.Password); err != nil {
 		code = e.ErrorFailEncryption
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
+	//创建用户
+	err = userDao.CreateUser(&user)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
 	}
 
 }
