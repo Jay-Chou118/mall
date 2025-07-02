@@ -1,11 +1,15 @@
 package dao
 
 import (
+	"context"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"gorm.io/plugin/dbresolver"
 )
 
 var _db *gorm.DB
@@ -18,13 +22,13 @@ func Database(connRead, connWrite string) {
 		ormLogger = logger.Default
 	}
 
-	db, err := gorm.Open(mysql.New(mysql.config{
+	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       connRead,
 		DefaultStringSize:         256,  //string类型的字段长度
 		DisableDatetimePrecision:  true, //
 		DontSupportRenameIndex:    true,
 		DontSupportRenameColumn:   true,
-		SKipInitializeWithVersion: false,
+		SkipInitializeWithVersion: false,
 	}), &gorm.Config{
 		Logger: ormLogger,
 		NamingStrategy: schema.NamingStrategy{
@@ -36,18 +40,18 @@ func Database(connRead, connWrite string) {
 	}
 	sqlDB, _ := db.DB()
 	sqlDB.SetMaxOpenConns(20)
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetConnMaxLifetime(time.second * 30)
+	sqlDB.SetMaxIdleConns(100)
+	sqlDB.SetConnMaxLifetime(time.Second * 30)
 	_db = db
 
 	//主从配置
 	_ = _db.Use(dbresolver.
 		Register(dbresolver.Config{
-			Source: []gorm.Dialector{mysql.Open(connWrite)}, //读操作
-			Replicas: []gorm.Dialector{mysql.Open(connRead),mysql.Open(connRead)},
-			Policy: dbresolver.RamdomPolicy{},
+			Sources:  []gorm.Dialector{mysql.Open(connWrite)}, //读操作
+			Replicas: []gorm.Dialector{mysql.Open(connRead), mysql.Open(connRead)},
+			Policy:   dbresolver.RandomPolicy{},
 		}))
-		migration()
+	migration()
 
 }
 

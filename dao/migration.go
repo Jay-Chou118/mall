@@ -1,7 +1,13 @@
 package dao
 
+import (
+	"fmt"
+
+	"github.com/Jay-Chou118/mall/model"
+)
+
 func migration() {
-	err := _db.Set("gorm:table_options","charset=utf8mb4").
+	err := _db.Set("gorm:table_options", "charset=utf8mb4").
 		AutoMigrate(
 			&model.User{},
 			&model.Address{},
@@ -13,10 +19,10 @@ func migration() {
 			&model.Product{},
 			&model.ProductImg{},
 			&model.Order{},
-			&model.Favorite{}
+			&model.Favorite{},
 		)
-	if err != nil{
-		fmt.Println("err",err)
+	if err != nil {
+		fmt.Println("err", err)
 	}
 
 }

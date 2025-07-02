@@ -1,8 +1,8 @@
 package model
 
-import "grom.io/gorm"
+import "gorm.io/gorm"
 
-type Category struct{
+type Category struct {
 	gorm.Model
 	Category string
 }

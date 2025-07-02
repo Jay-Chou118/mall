@@ -42,4 +42,5 @@ require (
 	github.com/stretchr/testify v1.10.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
 	gorm.io/gorm v1.30.0 // indirect
+	gorm.io/plugin/dbresolver v1.6.0
 )

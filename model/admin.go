@@ -1,11 +1,10 @@
 package model
 
-import "grom.io/gorm"
+import "gorm.io/gorm"
 
-type Admin struct{
+type Admin struct {
 	gorm.Model
-	UserName string
+	UserName       string
 	PasswordDigest string
-	Avatar string
-
+	Avatar         string
 }

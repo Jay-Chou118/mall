@@ -1,14 +1,13 @@
 package model
 
-import "grom.io/gorm"
+import "gorm.io/gorm"
 
-type Cart struct{
+type Cart struct {
 	gorm.Model
-	UserId uint gorm:"not null"
-	ProductId uint gorm:"not null"
-	BossId uint gorm:"not null"
-	Num uint gorm:"not null"
-	MaxNum uint gorm:"not null"
-	Check bool
-	
+	UserId    uint `gorm:"not null"`
+	ProductId uint `gorm:"not null"`
+	BossId    uint `gorm:"not null"`
+	Num       uint `gorm:"not null"`
+	MaxNum    uint `gorm:"not null"`
+	Check     bool
 }

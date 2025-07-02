@@ -1,9 +1,9 @@
 package model
 
-import "grom.io/gorm"
+import "gorm.io/gorm"
 
-type Carousel struct{
+type Carousel struct {
 	gorm.Model
-	ImgPath string
-	ProductId uint gorm:"not null"
+	ImgPath   string
+	ProductId uint `gorm:"not null"`
 }

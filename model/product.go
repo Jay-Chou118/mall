@@ -1,20 +1,19 @@
 package model
 
-import "grom.io/gorm"
+import "gorm.io/gorm"
 
-type Product struct{
+type Product struct {
 	gorm.Model
-	Name string
-	Category uint
-	Title string
-	Info string
-	ImgPath string
-	Price string
+	Name          string
+	Category      uint
+	Title         string
+	Info          string
+	ImgPath       string
+	Price         string
 	DiscountPrice string
-	OnSale bool gorm:"default:false"
-	Num int
-	BossId uint
-	BossName string
-	BossAvatar string
-
+	OnSale        bool `gorm:"default:false"`
+	Num           int
+	BossId        uint
+	BossName      string
+	BossAvatar    string
 }
