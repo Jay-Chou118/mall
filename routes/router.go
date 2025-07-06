@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"net/http"
-
+	api "github.com/Jay-Chou118/mall/api/v1"
 	"github.com/Jay-Chou118/mall/middleware"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func NewRouter() *gin.Engine {
@@ -19,6 +19,13 @@ func NewRouter() *gin.Engine {
 		})
 		//用户操作
 		v1.POST("user/register", api.UserRegister)
+		v1.POST("user/login", api.UserLogin)
+
+		authed := v1.Group("/") //需要登录保护
+		{
+			//用户操作
+			authed.PUT("user")
+		}
 	}
 	return r
 

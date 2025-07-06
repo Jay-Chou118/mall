@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/Jay-Chou118/mall/dao"
 	"github.com/Jay-Chou118/mall/model"
 	"github.com/Jay-Chou118/mall/pkg/e"
@@ -18,7 +17,7 @@ type UserService struct {
 
 }
 
-func (service UserService) Register(ctx context.Context) serializer.Response {
+func (service *UserService) Register(ctx context.Context) serializer.Response {
 	var user model.User
 	code := e.Success
 	if service.Key == "" || len(service.Key) != 16 {
@@ -55,12 +54,62 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 		NickName: service.NickName,
 		Status:   model.Active,
 		Avatar:   "avatar.jpg",
-		Money:    util.Encrypt.AesEncoding(10000),
+		Money:    util.Encrypt.AesEncoding("10000"),
 	}
 
 	//密码加密
 	if err = user.SetPassword(service.Password); err != nil {
 		code = e.ErrorFailEncryption
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
 	}
+	//创建用户
+	err = userDao.CreateUser(&user)
+	if err != nil {
+		code = e.Error
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
 
+func (service *UserService) Login(ctx context.Context) serializer.Response {
+	var user *model.User
+	code := e.Success
+	userDao := dao.NewUserDao(ctx)
+	user, exist, err := userDao.ExistOrNotByUserName(service.UserName)
+	if !exist || err != nil {
+		code = e.ErrorExistUserNotFound
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "用户不存在，请先注册",
+		}
+	}
+	if user.CheckPassword(service.Password) == false {
+		code = e.ErrorNotCompare
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "密码错误，请重试",
+		}
+	}
+	//http 无状态
+	token, err := util.GenerateToken(user.ID, service.UserName, 0)
+	if err != nil {
+		code = e.ErrorAuthToken
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Data:   "密码错误，请重新登录",
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.TokenData{User: serializer.BuildUser(user), Token: token},
+		Msg:    e.GetMsg(code),
+	}
 }
