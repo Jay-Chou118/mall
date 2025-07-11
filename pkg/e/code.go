@@ -25,4 +25,8 @@ const (
 	ErrorAuthToken             = 30005
 	ErrorAuthCheckTokenTimeOut = 30006
 	ErrorUploadFail            = 30007
+	ErrorSendEmail             = 30008
+
+	//product 模块测试
+
 )
