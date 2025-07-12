@@ -11,6 +11,7 @@ import (
 	"gopkg.in/mail.v2"
 	"mime/multipart"
 	"strings"
+	"time"
 )
 
 type UserService struct {
@@ -29,6 +30,13 @@ type SendEmailService struct {
 	//2.解绑邮箱
 	//3.改密码
 
+}
+
+type ValidEmailService struct {
+}
+
+type ShowMoneyService struct {
+	Key string `json:"key" form:"key"`
 }
 
 func (service *UserService) Register(ctx context.Context) serializer.Response {
@@ -243,6 +251,97 @@ func (service *SendEmailService) Send(ctx context.Context, uId uint) serializer.
 	}
 	return serializer.Response{
 		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
+
+// 验证邮箱
+func (service *ValidEmailService) Valid(ctx context.Context, token string) serializer.Response {
+	var userId uint
+	var email string
+	var password string
+	var operationType uint
+	code := e.Success
+	//验证token
+	if token == "" {
+		code = e.InvalidParams
+	} else {
+		claims, err := util.ParseEmailToken(token)
+		if err != nil {
+			code = e.ErrorAuthToken
+		} else if time.Now().Unix() > claims.ExpiresAt {
+			code = e.ErrorAuthCheckTokenTimeOut
+		} else {
+			userId = claims.UserID
+			email = claims.Email
+			password = claims.Password
+			operationType = claims.OperationType
+		}
+	}
+	if code != e.Success {
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
+	//获取该用户的信息
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(userId)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	if operationType == 1 {
+		//绑定邮箱
+		user.Email = email
+	} else if operationType == 2 {
+		//解绑邮箱
+		user.Email = ""
+	} else if operationType == 3 {
+		//修改密码
+		err = user.SetPassword(password)
+		if err != nil {
+			code = e.Error
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+	err = userDao.UpdateUserById(userId, user)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildUser(user),
+	}
+}
+
+// 展示用户金额
+func (service *ShowMoneyService) Show(ctx context.Context, uId uint) serializer.Response {
+	code := e.Success
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(uId)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildMoney(user, service.Key),
 		Msg:    e.GetMsg(code),
 	}
 }

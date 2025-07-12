@@ -21,6 +21,9 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
 
+		//轮播图
+		v1.GET("carousels", api.ListCarousel)
+
 		authed := v1.Group("/") //需要登录保护
 		authed.Use(middleware.JWT())
 		{
@@ -28,6 +31,10 @@ func NewRouter() *gin.Engine {
 			authed.PUT("user", api.UserUpdate)
 			authed.POST("avatar", api.UploadAvatar)
 			authed.POST("user/sending-email", api.SendEmail)
+			authed.POST("user/valid-email", api.ValidEmail)
+
+			//显示金额
+			authed.POST("money", api.ShowMoney)
 		}
 	}
 	return r
