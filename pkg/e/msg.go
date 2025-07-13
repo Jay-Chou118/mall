@@ -12,6 +12,7 @@ var MsgFlags = map[int]string{
 	ErrorAuthCheckTokenTimeOut: "token已过期",
 	ErrorUploadFail:            "图片上传失败",
 	ErrorSendEmail:             "邮件发送失败",
+	ErrorProductImgUpload:      "图片上传错误",
 }
 
 func GetMsg(code int) string {
