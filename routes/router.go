@@ -26,6 +26,7 @@ func NewRouter() *gin.Engine {
 
 		//商品操作
 		v1.GET("products", api.ListProduct)
+		v1.GET("products/:id",api.ShowProduct)
 
 		authed := v1.Group("/") //需要登录保护
 		authed.Use(middleware.JWT())

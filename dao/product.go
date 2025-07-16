@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+
 	"github.com/Jay-Chou118/mall/model"
 	"gorm.io/gorm"
 )
@@ -38,5 +39,10 @@ func (dao *ProductDao) SearchProduct(info string, page model.BasePage) (products
 		return
 	}
 	err = dao.DB.Model(&model.Product{}).Where("title LIKE ? OR info LIKE ?", "%"+info+"%", "%"+info+"%").Offset((page.PageNum - 1) * (page.PageSize)).Limit(page.PageSize).Find(&products).Error
+	return
+}
+
+func (dao *ProductDao) GetProductById(id uint) (product *model.Product, err error) {
+	err = dao.DB.Model(&model.Product{}).Where("id=?", id).First(&product).Error
 	return
 }
