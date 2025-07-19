@@ -27,7 +27,7 @@ func NewRouter() *gin.Engine {
 		//商品操作
 		v1.GET("products", api.ListProduct)
 		v1.GET("products/:id", api.ShowProduct)
-		v1.GET("imgs/:id", api.ListProductImg)
+		v1.GET("image/:id", api.ListProductImg)
 		v1.GET("categories", api.ListCategory)
 
 		authed := v1.Group("/") //需要登录保护
@@ -50,6 +50,12 @@ func NewRouter() *gin.Engine {
 			authed.GET("favorites", api.ListFavorite)
 			authed.POST("favorites", api.CreateFavorite)
 			authed.DELETE("favorites/:id", api.DeleteFavorite)
+
+			authed.POST("address", api.CreateAddress)
+			authed.GET("address/:id", api.ShowAddress)
+			authed.GET("address", api.ListAddress)
+			authed.PUT("address/:id", api.UpdateAddress)
+			authed.DELETE("address/:id", api.DeleteAddress)
 
 		}
 	}

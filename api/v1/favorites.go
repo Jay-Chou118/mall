@@ -9,9 +9,9 @@ import (
 
 func CreateFavorite(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
-	CreateFavoriteService := service.FavoriteService{}
-	if err := c.ShouldBind(&CreateFavoriteService); err != nil {
-		res := CreateFavoriteService.Create(c.Request.Context(), claim.ID)
+	createFavoriteService := service.FavoriteService{}
+	if err := c.ShouldBind(&createFavoriteService); err != nil {
+		res := createFavoriteService.Create(c.Request.Context(), claim.ID)
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)
