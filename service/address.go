@@ -37,7 +37,6 @@ func (service *AddressService) Create(ctx context.Context, uId uint) serializer.
 	return serializer.Response{
 		Status: code,
 		Msg:    e.GetMsg(code),
-		Error:  err.Error(),
 	}
 }
 
@@ -104,7 +103,6 @@ func (service *AddressService) Update(ctx context.Context, uId uint, aId string)
 	return serializer.Response{
 		Status: code,
 		Msg:    e.GetMsg(code),
-		Error:  err.Error(),
 	}
 }
 

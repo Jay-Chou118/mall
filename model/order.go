@@ -10,6 +10,6 @@ type Order struct {
 	AddressId uint `gorm:"not null"`
 	Num       int
 	OrderNum  uint64
-	Type      uint
+	Type      uint //1 已支付 2 未支付
 	Money     float64
 }
