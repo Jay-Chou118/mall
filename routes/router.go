@@ -26,14 +26,16 @@ func NewRouter() *gin.Engine {
 
 		//商品操作
 		v1.GET("products", api.ListProduct)
-		v1.GET("products/:id",api.ShowProduct)
+		v1.GET("products/:id", api.ShowProduct)
+		v1.GET("imgs/:id", api.ListProductImg)
+		v1.GET("categories", api.ListCategory)
 
 		authed := v1.Group("/") //需要登录保护
 		authed.Use(middleware.JWT())
 		{
 			//用户操作
-			authed.PUT("user", api.UserUpdate)
-			authed.POST("avatar", api.UploadAvatar)
+			authed.PUT("user/update", api.UserUpdate)
+			authed.POST("user/avatar", api.UploadAvatar)
 			authed.POST("user/sending-email", api.SendEmail)
 			authed.POST("user/valid-email", api.ValidEmail)
 
@@ -43,6 +45,11 @@ func NewRouter() *gin.Engine {
 			//商品操作
 			authed.POST("product", api.CreateProduct)
 			authed.POST("products", api.SearchProduct)
+
+			//收藏夹操作
+			authed.GET("favorites", api.ListFavorite)
+			authed.POST("favorites", api.CreateFavorite)
+			authed.DELETE("favorites/:id", api.DeleteFavorite)
 
 		}
 	}

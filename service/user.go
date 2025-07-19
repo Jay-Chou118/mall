@@ -42,12 +42,19 @@ type ShowMoneyService struct {
 func (service *UserService) Register(ctx context.Context) serializer.Response {
 	var user model.User
 	code := e.Success
-	if service.Key == "" || len(service.Key) != 6 { //需要6位
+	if service.Key == "" || len(service.Key) < 6 { //需要6位
 		code = e.Error
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
 			Error:  "密钥长度不足",
+		}
+	} else if len(service.Key) > 6 {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  "密钥过长",
 		}
 	}
 	// 10000 ---> 密文存储 对称加密
