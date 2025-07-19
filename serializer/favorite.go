@@ -30,7 +30,7 @@ func BuildFavorite(favorite *model.Favorite, product *model.Product, boss *model
 		CreateAt:      favorite.CreatedAt.Unix(),
 		Name:          product.Name,
 		CategoryId:    product.CategoryId,
-		Title:         product.Title,
+		Title:         product.Tittle,
 		Info:          product.Info,
 		ImgPath:       conf.Host + conf.HttpPort + conf.ProductPath + product.ImgPath,
 		Price:         product.Price,

@@ -42,14 +42,14 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
-			Msg:   e.GetMsg(code),
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	product := &model.Product{
 		Name:          service.Name,
 		CategoryId:    service.CategoryId,
-		Title:         service.Title,
+		Tittle:        service.Title,
 		Info:          service.Info,
 		ImgPath:       path,
 		Price:         service.Price,
@@ -159,10 +159,10 @@ func (service *ProductService) Show(ctx context.Context, id string) serializer.R
 		}
 	}
 
-	return  serializer.Response{
+	return serializer.Response{
 		Status: code,
-		Msg: e.GetMsg(code),
-		Data: serializer.BuildProduct(product),
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildProduct(product),
 	}
 }
 

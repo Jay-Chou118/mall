@@ -28,7 +28,7 @@ func BuildProduct(item *model.Product) Product {
 		Id:            item.ID,
 		Name:          item.Name,
 		CategoryId:    item.CategoryId,
-		Title:         item.Title,
+		Title:         item.Tittle,
 		Info:          item.Info,
 		ImgPath:       conf.Host + conf.HttpPort + conf.ProductPath + item.ImgPath,
 		Price:         item.Price,
